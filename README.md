@@ -25,6 +25,26 @@ The code is based on a old compiler path available
 I wouldn't recommend using this in production code, but it is really
 useful for quick debugging.
 
+How does it work?
+-----------------
+
+ppx\_show uses the OCaml typer to find the type inferred for the
+argument of `show` or `pp` and generates a function according to this
+type.
+
+It has heuristics to print some abstract types such as sets and maps
+obtained from `Set.Make` and `Map.Make`.
+
+Tricks
+------
+
+To get automatic printing of abstract types When debugging, reveal
+them as private:
+
+```ocaml
+type t = private <internal representation>
+```
+
 Limitations
 -----------
 
