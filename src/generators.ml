@@ -1,7 +1,7 @@
 (*
  * generators.ml
  * -------------
- * Copyright : (c) 2011, Jeremie Dimino <jeremie@dimino.org>
+ * Copyright : (c) 2011-2015, Jeremie Dimino <jeremie@dimino.org>
  * Licence   : BSD3
 *)
 

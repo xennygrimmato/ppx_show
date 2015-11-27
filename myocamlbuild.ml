@@ -1,3 +1,10 @@
+(*
+ * myocamlbuild.ml
+ * ---------------
+ * Copyright : (c) 2015, Jeremie Dimino <jdimino@janestreet.com>
+ * Licence   : BSD3
+ *)
+
 open Ocamlbuild_plugin
 
 let () =

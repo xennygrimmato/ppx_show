@@ -1,3 +1,10 @@
+(*
+ * ppx_show.ml
+ * -----------
+ * Copyright : (c) 2015, Jeremie Dimino <jdimino@janestreet.com>
+ * Licence   : BSD3
+ *)
+
 let () = Generators.linkme
 
 let () =
