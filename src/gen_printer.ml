@@ -554,7 +554,7 @@ module MakeGenerator(Loc : Loc)(Combinators : Combinators) = struct
             in
             (printer_names, printer_exprs,
              mkfun (Combinators.map
-                      (exp_apply print_list [Combinators.tuple [print_elt]])
+                      (exp_apply print_list [print_elt])
                       ~f:(let loc = Loc.loc in Exp.ident ~loc { txt = elements; loc })))
           | _ ->
             (printer_names,
