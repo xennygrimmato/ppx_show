@@ -237,6 +237,13 @@ module MakeShow(Loc : Gen_printer.Loc) = struct
       (exp_apply
          (exp_ident ["Obj"; "extension_constructor_name"])
          [exp_var "$"])
+
+  let map printer ~f =
+    exp_fun
+      (pat_var "$")
+      (exp_apply
+         printer
+         [exp_apply f [exp_var "$"]])
 end
 
 module Show = Gen_printer.GeneratorOfCombinators(MakeShow)
@@ -548,6 +555,15 @@ module MakePrettyPrint(Loc : Gen_printer.Loc) = struct
             (exp_apply
                (exp_ident ["Obj"; "extension_constructor_name"])
                [exp_var "$"])))
+
+  let map printer ~f =
+    exp_fun
+      (pat_var "$ppf")
+      (exp_fun
+         (pat_var "$")
+         (exp_apply
+            printer
+            [exp_var "$ppf"; exp_apply f [exp_var "$"]]))
 end
 
 module PrettyPrint = Gen_printer.GeneratorOfCombinators(MakePrettyPrint)

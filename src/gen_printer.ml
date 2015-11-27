@@ -49,6 +49,7 @@ module type Combinators = sig
   val variant : (Longident.t * string * tuple_or_record) list -> expression
   val record : (Longident.t * string * expression) list -> expression
   val extension_constructor : expression
+  val map : expression -> f:expression -> expression
 end
 
 module MakeHelpers(Loc : Loc) = struct
@@ -511,10 +512,6 @@ module MakeGenerator(Loc : Loc)(Combinators : Combinators) = struct
           (printer_names,
            printer_exprs,
            mkfun (Combinators.record l))
-        | { type_kind = Type_abstract; type_manifest = None } ->
-          (printer_names,
-           printer_exprs,
-           mkfun Combinators.abstract)
         | { type_kind = Type_abstract; type_manifest = Some typ; type_private = Public } ->
           let printer_names, printer_exprs, printer = gen env printer_names printer_exprs params typ in
           (printer_names,
@@ -526,6 +523,44 @@ module MakeGenerator(Loc : Loc)(Combinators : Combinators) = struct
            printer_exprs,
            (* We need to do a coercion here. *)
            mkfun (exp_apply (exp_ident ["Obj"; "magic"]) [printer]))
+        | { type_kind = Type_abstract; type_manifest = None } ->
+          let li = longident_of_path path in
+          let bindings = replace_last li "bindings" in
+          let elements = replace_last li "elements" in
+          let has li = try let _ = Env.lookup_value li env in true with Not_found -> false in
+          begin match has bindings, has elements, decl.type_params with
+          | true, _, [x] ->
+            let key_path, _ = Env.lookup_type (replace_last li "key") env in
+            let printer_names, printer_exprs, print_key =
+              gen_constr_printer env printer_names printer_exprs key_path
+            in
+            let printer_names, printer_exprs, print_val =
+              gen env printer_names printer_exprs params x
+            in
+            let printer_names, printer_exprs, print_list =
+              gen_constr_printer env printer_names printer_exprs path_list
+            in
+            (printer_names, printer_exprs,
+             mkfun (Combinators.map
+                      (exp_apply print_list [Combinators.tuple [print_key; print_val]])
+                      ~f:(exp_ident (Longident.flatten bindings))))
+          | _, true, [] ->
+            let elt_path, _ = Env.lookup_type (replace_last li "elt") env in
+            let printer_names, printer_exprs, print_elt =
+              gen_constr_printer env printer_names printer_exprs elt_path
+            in
+            let printer_names, printer_exprs, print_list =
+              gen_constr_printer env printer_names printer_exprs path_list
+            in
+            (printer_names, printer_exprs,
+             mkfun (Combinators.map
+                      (exp_apply print_list [Combinators.tuple [print_elt]])
+                      ~f:(exp_ident (Longident.flatten elements))))
+          | _ ->
+            (printer_names,
+             printer_exprs,
+             mkfun Combinators.abstract)
+          end
         | { type_kind = Type_open } ->
           (printer_names,
            printer_exprs,

@@ -68,6 +68,8 @@ module type Combinators = sig
   val record : (Longident.t * string * expression) list -> expression
 
   val extension_constructor : expression
+
+  val map : expression -> f:expression -> expression
 end
 
 (** Create a generator from combinators. *)
