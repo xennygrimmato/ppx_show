@@ -35,14 +35,23 @@ type.
 It has heuristics to print some abstract types such as sets and maps
 obtained from `Set.Make` and `Map.Make`.
 
-Tricks
-------
+Tricks for abstract types
+-------------------------
 
-To get automatic printing of abstract types When debugging, reveal
-them as private:
+There are two ways to automatically print abstract types:
+
+1. reveal them as private: `type t = private <internal representation>`
+2. declare a specially named function that ppx\_show will recognize
+
+For (2) the function must be named as follow:
+
+- `string_of_<type-name>` for `[%show]`
+- `pp_print_<type_name>` for `[%pp]`
+
+The implementation can be as simple as:
 
 ```ocaml
-type t = private <internal representation>
+let pp_print_t : _ -> t -> _ = [%pp]
 ```
 
 Limitations
