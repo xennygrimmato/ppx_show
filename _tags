@@ -1,2 +1,2 @@
 <src/*>: use_ocamlcommon, warn(-40)
-<example/*>: ppx(src/ppx_show.byte), use_ppx_show
+<example/*.ml>: ppx(src/ppx_show.byte), use_ppx_show

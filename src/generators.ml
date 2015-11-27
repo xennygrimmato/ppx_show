@@ -19,9 +19,12 @@ module MakeShow(Loc : Gen_printer.Loc) = struct
 
   let typ t = typ_arrow t (typ_constr (Longident.Lident "string") [])
 
-  let get_param = function
-    | { Types.desc = Types.Tarrow (_, typ, _, _) } -> typ
-    | _ -> Location.raise_errorf ~loc:Loc.loc "invalid type for [%%show]"
+  let rec get_param : Types.type_expr -> _ = function
+    | { desc = Tarrow (_, typ, _, _) } -> typ
+    | { desc = (Tlink te | Tsubst te) } -> get_param te
+    | te ->
+      Location.raise_errorf ~loc:Loc.loc "invalid type for [%%show]: %s"
+        (Format.asprintf "%a" Printtyp.type_expr te)
 
   let prefix = "string_of_"
 
@@ -260,9 +263,12 @@ module MakePrettyPrint(Loc : Gen_printer.Loc) = struct
       (typ_constr (Longident.Ldot (Longident.Lident "Format", "formatter")) [])
       (typ_arrow t (typ_constr (Longident.Lident "unit") []))
 
-  let get_param = function
-    | { Types.desc = Types.Tarrow (_, _, { Types.desc = Types.Tarrow (_, typ, _, _) }, _) } -> typ
-    | _ -> Location.raise_errorf ~loc:Loc.loc "invalid type for [%%pp]"
+  let rec get_param : Types.type_expr -> _ = function
+    | { desc = Tarrow (_, _, { desc = Tarrow (_, typ, _, _) }, _) } -> typ
+    | { desc = (Tlink te | Tsubst te) } -> get_param te
+    | te ->
+      Location.raise_errorf ~loc:Loc.loc "invalid type for [%%pp]: %s"
+        (Format.asprintf "%a" Printtyp.raw_type_expr te)
 
   let prefix = "pp_print_"
 

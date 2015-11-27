@@ -561,7 +561,7 @@ end
 
 let generators_by_ext_name = Hashtbl.create 8
 let generators_by_prim_name = Hashtbl.create 8
-let prim_name = Printf.sprintf "%%__%s__"
+let prim_name s = "%" ^ s
 let register_generator name ~generate ~combinator_type =
   Hashtbl.add generators_by_ext_name name combinator_type;
   Hashtbl.add generators_by_prim_name (prim_name name) generate
