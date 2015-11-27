@@ -28,5 +28,6 @@ useful for quick debugging.
 Limitations
 -----------
 
-To use in code that requires `-rectypes`, you need to pass `-rectypes`
-to the ppx rewriter as well.
+- only works with OCaml 4.03
+- to use in code that requires `-rectypes`, you need to pass `-rectypes`
+  to the ppx rewriter as well
