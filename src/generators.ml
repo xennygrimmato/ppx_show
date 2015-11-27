@@ -21,7 +21,7 @@ module MakeShow(Loc : Gen_printer.Loc) = struct
 
   let get_param = function
     | { Types.desc = Types.Tarrow (_, typ, _, _) } -> typ
-    | _ -> failwith "invalid type for %show"
+    | _ -> Location.raise_errorf ~loc:Loc.loc "invalid type for [%%show]"
 
   let prefix = "string_of_"
 
@@ -262,7 +262,7 @@ module MakePrettyPrint(Loc : Gen_printer.Loc) = struct
 
   let get_param = function
     | { Types.desc = Types.Tarrow (_, _, { Types.desc = Types.Tarrow (_, typ, _, _) }, _) } -> typ
-    | _ -> failwith "invalid type for %pretty_print"
+    | _ -> Location.raise_errorf ~loc:Loc.loc "invalid type for [%%pp]"
 
   let prefix = "pp_print_"
 
@@ -553,3 +553,5 @@ let () =
       let loc = ty.ptyp_loc in
       let module M = MakePrettyPrint(struct let loc = loc end) in
       M.typ ty)
+
+let linkme = ()

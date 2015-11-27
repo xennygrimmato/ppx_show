@@ -6,6 +6,8 @@ let () =
       Options.use_ocamlfind := false
 
     | After_rules ->
-      ocaml_lib "ocamlcommon" ~extern:true ~dir:"+compiler-libs"
+      ocaml_lib "ocamlcommon" ~extern:true ~dir:"+compiler-libs";
+
+      dep ["use_ppx_show"] ["src/ppx_show.byte"];
 
     | _ -> ())
