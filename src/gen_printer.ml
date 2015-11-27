@@ -543,7 +543,7 @@ module MakeGenerator(Loc : Loc)(Combinators : Combinators) = struct
             (printer_names, printer_exprs,
              mkfun (Combinators.map
                       (exp_apply print_list [Combinators.tuple [print_key; print_val]])
-                      ~f:(exp_ident (Longident.flatten bindings))))
+                      ~f:(let loc = Loc.loc in Exp.ident ~loc { txt = bindings; loc })))
           | _, true, [] ->
             let elt_path, _ = Env.lookup_type (replace_last li "elt") env in
             let printer_names, printer_exprs, print_elt =
@@ -555,7 +555,7 @@ module MakeGenerator(Loc : Loc)(Combinators : Combinators) = struct
             (printer_names, printer_exprs,
              mkfun (Combinators.map
                       (exp_apply print_list [Combinators.tuple [print_elt]])
-                      ~f:(exp_ident (Longident.flatten elements))))
+                      ~f:(let loc = Loc.loc in Exp.ident ~loc { txt = elements; loc })))
           | _ ->
             (printer_names,
              printer_exprs,
