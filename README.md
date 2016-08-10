@@ -25,6 +25,13 @@ The code is based on a old compiler path available
 I wouldn't recommend using this in production code, but it is really
 useful for quick debugging.
 
+Building and Running
+--------------------
+
+1. Run `make` inside the `ppx_show` directory
+2. This will create a `ppx_show.native` file.
+3. Run: `ocamlc -ppx ./ppx_show.native example/example.ml`
+
 How does it work?
 -----------------
 
