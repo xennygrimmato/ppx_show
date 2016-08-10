@@ -93,12 +93,12 @@ module MakeHelpers(Loc : Loc) = struct
       pexp_attributes = [] }
 
   let exp_string str =
-    { pexp_desc = Pexp_constant (Const_string (str, None));
+    { pexp_desc = Pexp_constant (Pconst_string (str, None));
       pexp_loc = loc;
       pexp_attributes = [] }
 
   let exp_int int =
-    { pexp_desc = Pexp_constant (Const_int int);
+    { pexp_desc = Pexp_constant (Pconst_integer (string_of_int int, None));
       pexp_loc = loc;
       pexp_attributes = [] }
 
